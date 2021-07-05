@@ -1,72 +1,99 @@
-# TSDX User Guide
+# use-relay-mock-environment
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+> Yes, I know the name is a mouthful, but it's specific!
 
-> This TSDX setup is meant for developing libraries (not apps!) that can be published to NPM. If you’re looking to build a Node app, you could use `ts-node-dev`, plain `ts-node`, or simple `tsc`.
+A super easy way to test Relay Components in Storybook or in a dummy page.
 
-> If you’re new to TypeScript, checkout [this handy cheatsheet](https://devhints.io/typescript)
+## How does it work?
 
-## Commands
+The hook does three main things:
 
-TSDX scaffolds your new library inside `/src`.
+1. Tries to guess which data type each individual field is, using [fuse.js](https://fusejs.io/) to search through a list of keywords mapping to types. Example: `fieldName: "sirname"` -> `type: "faker.name.lastName"`.
+2. Using the above guessed type, it generates fake data for that field, using [faker.js](https://www.npmjs.com/package/faker). Example: `guessedType: "faker.name.lastName"` -> `fakeData: "Doe"`.
+3. Calls `environment.mock.resolveMostRecentOperation()`, from [relay-test-utils](https://github.com/facebook/relay/tree/main/packages/relay-test-utils), on a interval (300ms by default) to resolve all operations (not just the first Query/Mutation/Subscription) and create mock data from the relay-compiled GraphQL. It is slightly modified to have more contentful mock data (e.g. length of arrays that match with your limit parameters - example: `first: 10` --> `Array(10)`, or random length arrays).
 
-To run TSDX, use:
+### What if the guessed type is wrong?
 
-```bash
-npm start # or yarn start
+If the hook guesses the type of a field wrong, you can provide additional information in the `data` in the options of `createRelayMockEnvironmentHook()` (global level) or `useRelayMockEnvironment()` (component specific level):
+
+```js
+const useRelayMockEnvironment = createRelayMockEnvironmentHook({
+  data: {
+    [fieldName]: {
+      type: 'faker.random.word',
+    },
+  },
+});
+
+// OR
+
+const environment = useRelayMockEnvironment({
+  data: {
+    [fieldName]: {
+      type: 'faker.random.word',
+      description: 'random word', // OR you can try describing it,  if you don't know the exact faker type.
+    },
+  },
+});
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+# Examples
 
-To do a one-off build, use `npm run build` or `yarn build`.
+Create the useRelayMockEnvironment hook using createRelayMockEnvironmentHook() and passing in your global options
 
-To run tests, use `npm test` or `yarn test`.
+```jsx
+// useRelayMockEnvironment.(js | jsx | ts | tsx)
+import createRelayMockEnvironmentHook from 'use-relay-mock-environment';
 
-## Configuration
+const useRelayMockEnvironment = createRelayMockEnvironmentHook({
+  // ...Add global options here (optional)
+});
 
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
+export default useRelayMockEnvironment;
+```
 
-### Jest
+## Storybook
 
-Jest tests are set up to run with `npm test` or `yarn test`.
+```jsx
+// MyComponent.stories.(js | jsx | ts | tsx)
+import React from 'react';
+import { RelayEnvironmentProvider } from 'react-relay';
+import useRelayMockEnvironment from './path/to/useRelayMockEnvironment';
+import MyComponent from './MyComponentQuery';
 
-### Bundle Analysis
+export default {
+  title: 'MyComponent',
+  component: MyComponent,
+};
 
-[`size-limit`](https://github.com/ai/size-limit) is set up to calculate the real cost of your library with `npm run size` and visualize the bundle with `npm run analyze`.
+export const Default = () => {
+  const environment = useRelayMockEnvironment({
+    // ...Add story specific options here (optional)
+  });
 
-#### Setup Files
+  return (
+    <RelayEnvironmentProvider environment={environment}>
+      <MyComponent />
+    </RelayEnvironmentProvider>
+  );
+};
+```
 
-This is the folder structure we set up for you:
+# Want to contribute?
+
+This package was bootstrapped using [TSDX](https://tsdx.io/), and all major functions are exported out of /src/index.ts
+
+### Folder Structure
 
 ```txt
 /src
-  index.tsx       # EDIT THIS
+  index.ts       # EDIT THIS
+  utils.ts       # ADD utility functions here
 /test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
+  *.test.ts      # EDIT THESE
 ```
 
-### Rollup
-
-TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
-
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### GitHub Actions
-
-Two actions are added by default:
-
-- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
-- `size` which comments cost comparison of your library on every pull request using [`size-limit`](https://github.com/ai/size-limit)
-
-## Optimizations
+### Optimizations
 
 Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
 
@@ -79,25 +106,3 @@ if (__DEV__) {
   console.log('foo');
 }
 ```
-
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
-
-## Module Formats
-
-CJS, ESModules, and UMD module formats are supported.
-
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
-
-## Named Exports
-
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
-
-## Including Styles
-
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
-
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
-
-## Publishing to NPM
-
-We recommend using [np](https://github.com/sindresorhus/np).
