@@ -1,8 +1,6 @@
 # use-relay-mock-environment
 
-> Yes, I know the name is a mouthful, but it's specific!
-
-A super easy way to test Relay Components in Storybook or in a dummy page.
+A super easy way to test Relay Components in Storybook or in dummy pages.
 
 ## How does it work?
 
