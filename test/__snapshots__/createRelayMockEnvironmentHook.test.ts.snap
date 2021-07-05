@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createRelayMockEnvironmentHook creates a useRelayMockEnvironment() hook 1`] = `[Function]`;
