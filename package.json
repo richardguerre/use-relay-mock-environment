@@ -1,0 +1,64 @@
+{
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "peerDependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "name": "use-relay-mock-environment",
+  "author": "Richard Guerre",
+  "module": "dist/use-relay-mock-environment.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/use-relay-mock-environment.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/use-relay-mock-environment.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^5.0.1",
+    "@types/faker": "^5.5.6",
+    "@types/react": "^17.0.13",
+    "@types/relay-test-utils": "^6.0.4",
+    "husky": "^7.0.0",
+    "size-limit": "^5.0.1",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.0",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "faker": "^5.5.3",
+    "fuse.js": "^6.4.6",
+    "react": "^17.0.2",
+    "relay-test-utils": "^11.0.2"
+  }
+}
