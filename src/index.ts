@@ -11,6 +11,7 @@ import {
 } from './relay-test-utils';
 import fakerTypes, { FakerPath } from './faker';
 import { FuseTypes } from './fuse';
+import { runFakerUsingPath, startsWithArray } from './utils';
 
 export type RelayMockOptions = {
   instantInitialLoading?: boolean;
@@ -36,7 +37,6 @@ export type GlobalOptions = RelayMockOptions & {
 export const createRelayMockEnvironmentHook = (
   globalOptions?: GlobalOptions
 ) => {
-  console.log('createRelayMockEnvironmentHook');
   const fuseOptions: FuseTypes.IFuseOptions<any> = {
     keys: ['keywords'],
     ...globalOptions?.fuseOptions,
@@ -44,7 +44,6 @@ export const createRelayMockEnvironmentHook = (
   const fuse = new Fuse(fakerTypes, fuseOptions);
 
   const useRelayMockEnvironment = (options?: RelayMockOptions) => {
-    console.log('useRelayMockEnvironment');
     const opts: RelayMockOptions = {
       ...globalOptions,
       ...options,
@@ -77,7 +76,6 @@ export const createRelayMockEnvironmentHook = (
 
                 // custom data from options
                 const data = opts.data?.[context.name ?? ''];
-                // if (context.name === 'firstName') console.log(data);
                 if (
                   data &&
                   (!data.parentTypeName ||
@@ -87,7 +85,7 @@ export const createRelayMockEnvironmentHook = (
                   if (data.values) {
                     const result =
                       data.values[
-                        Math.round(Math.random() * data.values.length) - 1
+                        Math.round(Math.random() * (data.values.length - 1))
                       ];
                     if (result) return result;
                   }
@@ -195,35 +193,6 @@ export const createRelayMockEnvironmentHook = (
   };
 
   return useRelayMockEnvironment;
-};
-
-const runFakerUsingPath = (fakerPath: string) => {
-  if (fakerPath.slice(0, 6) !== 'faker.') {
-    return 'relay-mock-default';
-  }
-  const path = fakerPath.slice(6).split('.');
-
-  let func = faker as any;
-  for (const el of path) {
-    func = func[el];
-  }
-
-  if (typeof func === 'function') {
-    return (func as Function)();
-  }
-
-  return 'provided faker path is not a function';
-};
-
-const startsWithArray = (str: string, searchArr: string[]) => {
-  let result = false;
-  for (const key of searchArr) {
-    if (str.startsWith(key)) {
-      result = true;
-    }
-  }
-
-  return result;
 };
 
 export default createRelayMockEnvironmentHook;
