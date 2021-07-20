@@ -217,7 +217,10 @@ class RelayMockPayloadGenerator {
     this._selectionMetadata = options.selectionMetadata ?? {};
     // $FlowFixMe[incompatible-call]
     this._resolveValue = createValueResolver(this._mockResolvers);
-    this._options = options.options;
+    this._options = {
+      ...options.options,
+      useLimitArguments: true
+    };
   }
 
   generate(
