@@ -13,6 +13,16 @@ import fakerTypes, { FakerPath } from './faker';
 import { FuseTypes } from './fuse';
 import { runFakerUsingPath, startsWithArray } from './utils';
 
+export type RelayMockData = {
+  [fieldName: string]: {
+    path?: string;
+    parentTypeName?: string;
+    type?: FakerPath;
+    values?: Array<any>;
+    description?: string;
+  };
+};
+
 export type RelayMockOptions = {
   instantInitialLoading?: boolean;
   loadTime?: number;
@@ -20,15 +30,7 @@ export type RelayMockOptions = {
   generatorOptions?: MockPayloadGeneratorOptions;
   customResolvers?: MockResolvers;
   extendStringResolver?: MockResolver;
-  data?: {
-    [fieldName: string]: {
-      path?: string;
-      parentTypeName?: string;
-      type?: FakerPath;
-      values?: Array<any>;
-      description?: string;
-    };
-  };
+  data?: RelayMockData;
 };
 export type GlobalOptions = RelayMockOptions & {
   fuseOptions?: FuseTypes.IFuseOptions<any>;
