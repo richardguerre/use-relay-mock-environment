@@ -812,13 +812,17 @@ class RelayMockPayloadGenerator {
       );
     };
 
-    let arrayLength = 1;
-    for (const [key, value] of Object.entries(new Object(parent?.args))) {
-      if (['first', 'last', 'limit'].includes(key)) {
-        arrayLength = this._options?.randomArrayLength
-          ? Math.round(Math.random() * value) + 1
-          : value;
-        break;
+    let arrayLength = this._options?.arrayLength ?? 1;
+    if(this._options?.randomArrayLength) {
+      arrayLength = Math.round(Math.random() * (this._options.maxRandomArrayLength ?? 10)) + (this._options.minRandomArrayLength ?? 1);
+    } else if(this._options?.useLimitArguments) {
+      for (const [key, value] of Object.entries(new Object(parent?.args))) {
+        if (['first', 'last', 'limit', ...(this._options?.limitArguments ?? [])].includes(key)) {
+          arrayLength = this._options?.randomArrayLength
+            ? Math.round(Math.random() * value) + 1
+            : value;
+          break;
+        }
       }
     }
 
