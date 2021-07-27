@@ -38,7 +38,7 @@ const environment = useRelayMockEnvironment({
 });
 ```
 
-You can read more about `data overrides` [here](docs/modules.md#relaymockdata).
+You can read more about `data overrides` [here](https://github.com/richardguerre/use-relay-mock-environment/blob/master/docs/modules.md#relaymockdata).
 
 # Examples
 
@@ -96,7 +96,7 @@ You can specify the following `options` in `createRelayMockEnvironmentHook(optio
 | `instantInitialLoading?` | `boolean`                                        | (optional) Whether to instantly load the GraphQL operation. By default there is a 300ms loading time to mimick real-world network conditions. This only applies to the initial loading. If you would like to change the loading time, set `loadTime` instead.                                                                                                                                                                                                                                                                                        |
 | `loadTime?`              | `number`                                         | (optional) Loading time in miliseconds for each GraphQL operations. Default is 300ms as to mimick real-world network conditions.                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
-You can read more about `options` [here](docs/modules.md#relaymockoptions).
+You can read more about `options` [here](https://github.com/richardguerre/use-relay-mock-environment/blob/master/docs/modules.md#relaymockoptions).
 
 # Want to contribute?
 

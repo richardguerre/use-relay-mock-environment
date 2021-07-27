@@ -34,7 +34,10 @@
     "trailingComma": "es5"
   },
   "name": "use-relay-mock-environment",
-  "author": "Richard Guerre",
+  "author": "Richard Guerre @richardguerre",
+  "homepage": "https://github.com/richardguerre/use-relay-mock-environment",
+  "bugs": "https://github.com/richardguerre/use-relay-mock-environment/issues",
+  "repository": "richardguerre/use-relay-mock-environment",
   "module": "dist/use-relay-mock-environment.esm.js",
   "size-limit": [
     {
