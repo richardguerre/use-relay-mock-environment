@@ -18,7 +18,7 @@ export const runFakerUsingPath = (fakerPath: string) => {
   return 'provided faker path is not a function';
 };
 
-export const startsWithArray = (str: string, searchArr: string[]) => {
+export const startsWithOneOf = (str: string, searchArr: string[]) => {
   let result = false;
   for (const key of searchArr) {
     if (str.startsWith(key)) {
