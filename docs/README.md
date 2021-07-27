@@ -4,6 +4,10 @@ use-relay-mock-environment / [Modules](modules.md)
 
 A super easy way to test Relay Components in Storybook or in dummy pages.
 
+[![Version](https://img.shields.io/npm/v/use-relay-mock-environment.svg)](https://npmjs.org/package/use-relay-mock-environment)
+[![Downloads/week](https://img.shields.io/npm/dw/use-relay-mock-environment.svg)](https://npmjs.org/package/use-relay-mock-environment)
+[![License](https://img.shields.io/npm/l/use-relay-mock-environment.svg)](https://github.com/richardguerre/use-relay-mock-environment/blob/master/package.json)
+
 ## How does it work?
 
 The hook does three main things:
