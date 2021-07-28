@@ -42,28 +42,6 @@ export type RelayMockDataField = {
   mockPath?: string;
 
   /**
-   * (optional) the name of the parent type. Example:
-   * ```
-   * fragment UserProfile_user on users {
-   *   firstName
-   * }
-   * ```
-   * In this case, the parent type name of field `firstName` is `users`.
-   *
-   * NOTE: Use the new notation to override using parentTypeName:
-   * ```
-   * const data = {
-   *   "parentTypeName": {
-   *     "fieldName": {
-   *       mockType: 'faker.random.word',
-   *     }
-   *   }
-   * }
-   * ```
-   */
-  mockParentTypeName?: string;
-
-  /**
    * type/category of the field. Only faker types are supported for now. Example:
    * Setting mockType to `faker.random.word` will result in generating a random word.
    */
@@ -92,16 +70,8 @@ export type RelayMockDataField = {
 
 /**
  * An object containing overrides to the types/categories of each field, where each key is the `fieldName` or `parentTypeName` (see below).
- *
- * For general use, you can just specify the `fieldName` as the key. Example:
- * ```
- * const mockData = {
- *   firstName: {
- *     mockType: 'faker.name.firstName'
- *   }
- * }
- * ```
- * OR be more specific by first specifying the `parentTypeName` as the key, and the value is an object containing the `fieldName`(s) as the key(s). Example:
+
+ * First specify the `parentTypeName` as the key, and the value is an object containing the `fieldName`(s) as the key(s). Example:
  * ```js
  * const mockData = {
  *   users: {
@@ -116,8 +86,6 @@ export type RelayMockData = {
   [parentTypeName: string]: {
     [fieldName: string]: RelayMockDataField;
   };
-} & {
-  [fieldName: string]: RelayMockDataField;
 };
 
 export type RelayMockOptions = {
@@ -167,27 +135,19 @@ export type RelayMockOptions = {
   extendStringResolver?: MockResolver;
 
   /**
-   * (optional) an object containing overrides to the types/categories of each field, where each key is the `fieldName` or `parentTypeName` (see below).
-   *
-   * For general use, you can just specify the `fieldName` as the key. Example:
-   * ```
-   * const mockData = {
-   *   firstName: {
-   *     mockType: 'faker.name.firstName'
-   *   }
-   * }
-   * ```
-   * Or be more specific by first specifying the `parentTypeName` as the key, and the value is an object containing the `fieldName`(s) as the key(s). Example:
-   * ```js
-   * const mockData = {
-   *   users: {
-   *     firstName: {
-   *       mockType: 'faker.name.firstName'
-   *     }
-   *   }
-   * }
-   * ```
-   */
+ * (optional) an object containing overrides to the types/categories of each field, where each key is the `fieldName` or `parentTypeName` (see below).
+
+ * First specify the `parentTypeName` as the key, and the value is an object containing the `fieldName`(s) as the key(s). Example:
+ * ```js
+ * const mockData = {
+ *   users: {
+ *     firstName: {
+ *       mockType: 'faker.name.firstName'
+ *     }
+ *   }
+ * }
+ * ```
+ */
   data?: RelayMockData;
 };
 
@@ -251,34 +211,10 @@ export function createRelayMockEnvironmentHook(
 
                 // custom data from options
                 // specific (parentTypeName + name)
-                const specificData =
+                const data =
                   opts.data?.[context.parentType ?? '']?.[context.name ?? ''];
                 if (
-                  specificData &&
-                  (!specificData.mockParentTypeName ||
-                    specificData.mockParentTypeName === context.parentType) &&
-                  (!specificData.mockPath ||
-                    specificData.mockPath === context.path?.join('.'))
-                ) {
-                  if (specificData.mockValues) {
-                    const result =
-                      specificData.mockValues[
-                        Math.round(
-                          Math.random() * (specificData.mockValues.length - 1)
-                        )
-                      ];
-                    if (result) return result;
-                  }
-                  if (specificData.mockType) {
-                    return runFakerUsingPath(specificData.mockType);
-                  }
-                }
-                // general (name only)
-                const data = opts.data?.[context.name ?? ''];
-                if (
                   data &&
-                  (!data.mockParentTypeName ||
-                    data.mockParentTypeName === context.parentType) &&
                   (!data.mockPath || data.mockPath === context.path?.join('.'))
                 ) {
                   if (data.mockValues) {
@@ -335,8 +271,6 @@ export function createRelayMockEnvironmentHook(
                 // fuzzy search specified description
                 if (
                   data &&
-                  (!data.mockParentTypeName ||
-                    data.mockParentTypeName === context.parentType) &&
                   (!data.mockPath ||
                     data.mockPath === context.path?.join('.')) &&
                   data.mockDescription
