@@ -164,7 +164,7 @@ export type RelayMockGlobalOptions = RelayMockOptions & {
 /**
  * The function to create the `useRelayMockEnvironment()` hook.
  *
- * This is where FuseJS (used for fuzzy searching) is initialized.
+ * This is where the global options and FuseJS (used for fuzzy searching) are initialized.
  *
  * @param globalOptions options to be applied to all instances of useRelayMockEnvironment hook. Read more about the global options above.
  * @returns a function that is the `useRelayMockEnvironment()` React hook. Read more about its `options` above, in RelayMockOptions.
@@ -196,109 +196,116 @@ export function createRelayMockEnvironmentHook(
       if (!opts.forceLoading) {
         try {
           environment.mock.resolveMostRecentOperation(operation => {
-            return MockPayloadGenerator.generate(operation, {
-              String(context, generateId) {
-                // custom injected resolvers
-                if (opts.extendStringResolver) {
-                  const extendStringReturn = opts.extendStringResolver(
-                    context,
-                    generateId
-                  );
-                  if (extendStringReturn !== 'relay-mock-default') {
-                    return extendStringReturn;
+            return MockPayloadGenerator.generate(
+              operation,
+              {
+                String(context, generateId) {
+                  // custom injected resolvers
+                  if (opts.extendStringResolver) {
+                    const extendStringReturn = opts.extendStringResolver(
+                      context,
+                      generateId
+                    );
+                    if (extendStringReturn !== 'relay-mock-default') {
+                      return extendStringReturn;
+                    }
                   }
-                }
 
-                // custom data from options
-                // specific (parentTypeName + name)
-                const data =
-                  opts.data?.[context.parentType ?? '']?.[context.name ?? ''];
-                if (
-                  data &&
-                  (!data.mockPath || data.mockPath === context.path?.join('.'))
-                ) {
-                  if (data.mockValues) {
-                    const result =
-                      data.mockValues[
-                        Math.round(Math.random() * (data.mockValues.length - 1))
-                      ];
-                    if (result) return result;
+                  // custom data from options
+                  // specific (parentTypeName + name)
+                  const data =
+                    opts.data?.[context.parentType ?? '']?.[context.name ?? ''];
+                  if (
+                    data &&
+                    (!data.mockPath ||
+                      data.mockPath === context.path?.join('.'))
+                  ) {
+                    if (data.mockValues) {
+                      const result =
+                        data.mockValues[
+                          Math.round(
+                            Math.random() * (data.mockValues.length - 1)
+                          )
+                        ];
+                      if (result) return result;
+                    }
+                    if (data.mockType) {
+                      return runFakerUsingPath(data.mockType);
+                    }
                   }
-                  if (data.mockType) {
-                    return runFakerUsingPath(data.mockType);
+
+                  // TODO: extended keywords (use another fuse from options)
+
+                  // special start/end of context.name searches
+                  const lowerCasedName = context.name?.toLowerCase() ?? '';
+                  if (
+                    startsWithOneOf(lowerCasedName, [
+                      'is',
+                      'was',
+                      'has',
+                      'had',
+                      'can',
+                      'will',
+                      'need',
+                    ])
+                  ) {
+                    return faker.datatype.boolean();
                   }
-                }
+                  if (lowerCasedName.endsWith('id')) {
+                    return generateId();
+                  }
+                  if (
+                    ![
+                      'createdat',
+                      'updatedat',
+                      'created_at',
+                      'updated_at',
+                    ].includes(lowerCasedName) &&
+                    lowerCasedName.endsWith('at')
+                  ) {
+                    return faker.date.recent();
+                  }
 
-                // TODO: extended keywords (use another fuse from options)
+                  // optimistic return
+                  if (fieldNameToMockTypeMap.has(context.name)) {
+                    return runFakerUsingPath(
+                      fieldNameToMockTypeMap.get(context.name)
+                    );
+                  }
 
-                // special start/end of context.name searches
-                const lowerCasedName = context.name?.toLowerCase() ?? '';
-                if (
-                  startsWithOneOf(lowerCasedName, [
-                    'is',
-                    'was',
-                    'has',
-                    'had',
-                    'can',
-                    'will',
-                    'need',
-                  ])
-                ) {
-                  return faker.datatype.boolean();
-                }
-                if (lowerCasedName.endsWith('id')) {
-                  return generateId();
-                }
-                if (
-                  ![
-                    'createdat',
-                    'updatedat',
-                    'created_at',
-                    'updated_at',
-                  ].includes(lowerCasedName) &&
-                  lowerCasedName.endsWith('at')
-                ) {
-                  return faker.date.recent();
-                }
+                  // fuzzy search specified description
+                  if (
+                    data &&
+                    (!data.mockPath ||
+                      data.mockPath === context.path?.join('.')) &&
+                    data.mockDescription
+                  ) {
+                    const results = fuse.search(data.mockDescription);
+                    if (results.length > 0 && results[0]?.item.type) {
+                      fieldNameToMockTypeMap.set(
+                        context.name,
+                        results[0].item.type
+                      );
+                      return runFakerUsingPath(results[0].item.type);
+                    }
+                  }
 
-                // optimistic return
-                if (fieldNameToMockTypeMap.has(context.name)) {
-                  return runFakerUsingPath(
-                    fieldNameToMockTypeMap.get(context.name)
-                  );
-                }
-
-                // fuzzy search specified description
-                if (
-                  data &&
-                  (!data.mockPath ||
-                    data.mockPath === context.path?.join('.')) &&
-                  data.mockDescription
-                ) {
-                  const results = fuse.search(data.mockDescription);
+                  // fuzzy search by context.name
+                  const results = fuse.search(context.name ?? '');
                   if (results.length > 0 && results[0]?.item.type) {
                     fieldNameToMockTypeMap.set(
                       context.name,
                       results[0].item.type
                     );
-                    return runFakerUsingPath(results[0].item.type);
+                    return runFakerUsingPath(results[0]?.item.type);
                   }
-                }
 
-                // fuzzy search by context.name
-                const results = fuse.search(context.name ?? '');
-                if (results.length > 0 && results[0]?.item.type) {
-                  fieldNameToMockTypeMap.set(
-                    context.name,
-                    results[0].item.type
-                  );
-                  return runFakerUsingPath(results[0]?.item.type);
-                }
-
-                return `<${context.name}-${generateId()}>`;
+                  return `<${context.name}-${generateId()}>`;
+                },
+                ...opts.customResolvers,
               },
-              ...opts.customResolvers,
-            });
+              opts.generatorOptions
+            );
           });
         } catch (err) {
           // ignore errors related to triggering resolveMostRecentOperation() too many times
