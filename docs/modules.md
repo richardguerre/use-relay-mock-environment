@@ -40,7 +40,7 @@ const mockData = {
 
 #### Defined in
 
-[index.ts:85](https://github.com/richardguerre/use-relay-mock-environment/blob/97b41ce/src/index.ts#L85)
+[index.ts:85](https://github.com/richardguerre/use-relay-mock-environment/blob/9215fbc/src/index.ts#L85)
 
 ___
 
@@ -68,7 +68,7 @@ You can specify one or more of the following:
 
 #### Defined in
 
-[index.ts:26](https://github.com/richardguerre/use-relay-mock-environment/blob/97b41ce/src/index.ts#L26)
+[index.ts:26](https://github.com/richardguerre/use-relay-mock-environment/blob/9215fbc/src/index.ts#L26)
 
 ___
 
@@ -80,7 +80,7 @@ Same as the `RelayMockOptions` below.
 
 #### Defined in
 
-[index.ts:157](https://github.com/richardguerre/use-relay-mock-environment/blob/97b41ce/src/index.ts#L157)
+[index.ts:157](https://github.com/richardguerre/use-relay-mock-environment/blob/9215fbc/src/index.ts#L157)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[index.ts:91](https://github.com/richardguerre/use-relay-mock-environment/blob/97b41ce/src/index.ts#L91)
+[index.ts:91](https://github.com/richardguerre/use-relay-mock-environment/blob/9215fbc/src/index.ts#L91)
 
 ## Functions
 
@@ -112,7 +112,7 @@ ___
 
 The function to create the `useRelayMockEnvironment()` hook.
 
-This is where FuseJS (used for fuzzy searching) is initialized.
+This is where the global options and FuseJS (used for fuzzy searching) are initialized.
 
 #### Parameters
 
@@ -140,4 +140,4 @@ a function that is the `useRelayMockEnvironment()` React hook. Read more about i
 
 #### Defined in
 
-[index.ts:172](https://github.com/richardguerre/use-relay-mock-environment/blob/97b41ce/src/index.ts#L172)
+[index.ts:172](https://github.com/richardguerre/use-relay-mock-environment/blob/9215fbc/src/index.ts#L172)
