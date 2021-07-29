@@ -11,7 +11,7 @@ import {
 } from './relay-test-utils';
 import fakerTypes, { FakerPath } from './faker';
 import { FuseTypes } from './fuse';
-import { runFakerUsingPath, startsWithOneOf } from './utils';
+import { runFakerUsingPath, seedFaker, startsWithOneOf } from './utils';
 
 /**
  * An object to describe how to override the guessed type/category by use-relay-mock-environment.
@@ -149,6 +149,20 @@ export type RelayMockOptions = {
  * ```
  */
   data?: RelayMockData;
+
+  /**
+   * Runs `faker.seed(n)` with `n` being the number that you specify.
+   *
+   * You can alternatively give `seed` instead which accepts both a string or number.
+   */
+  fakerSeed?: number;
+
+  /**
+   * If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify. This is the same as giving `fakerSeed`.
+   *
+   * If a string is passed in, it first converts the string into a hashCode number (like Java's String.hashCode()), and then runs `faker.seed(n)`, where `n` is the hashCode number.
+   */
+  seed?: number | string;
 };
 
 /**
@@ -177,6 +191,7 @@ export function createRelayMockEnvironmentHook(
     ...globalOptions?.fuseOptions,
   };
   const fuse = new Fuse(fakerTypes, fuseOptions);
+  seedFaker(globalOptions);
 
   function useRelayMockEnvironment(options?: RelayMockOptions) {
     const opts: RelayMockOptions = {
@@ -191,6 +206,7 @@ export function createRelayMockEnvironmentHook(
     const environment = useMemo(() => createMockEnvironment(), []);
 
     const fieldNameToMockTypeMap = new Map();
+    seedFaker(options);
 
     const main = () => {
       if (!opts.forceLoading) {

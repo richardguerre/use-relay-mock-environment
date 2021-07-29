@@ -1,4 +1,5 @@
 import faker from 'faker';
+import { RelayMockOptions } from '.';
 
 export const runFakerUsingPath = (fakerPath: string) => {
   if (fakerPath.slice(0, 6) !== 'faker.') {
@@ -27,4 +28,31 @@ export const startsWithOneOf = (str: string, searchArr: string[]) => {
   }
 
   return result;
+};
+
+export const hashCode = (str: string): number => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash += Math.pow(str.charCodeAt(i) * 31, str.length - i);
+    hash = hash & hash; // Converts to 32bit integer
+  }
+  return hash;
+};
+
+/**
+ * Runs `faker.seed()` using either `options.fakerSeed` or `options.seed`. If neither is provided, then it won't seed.
+ *
+ * @param options hook-level options or global-level options that has `fakerSeed` or `seed`
+ */
+export const seedFaker = (options?: RelayMockOptions) => {
+  // seed FakerJS if provided
+  if (options?.fakerSeed) {
+    faker.seed(options.fakerSeed);
+  } else if (options?.seed) {
+    if (typeof options.seed === 'number') {
+      faker.seed(options.seed);
+    } else {
+      faker.seed(hashCode(options.seed));
+    }
+  }
 };
