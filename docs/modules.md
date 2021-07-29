@@ -40,7 +40,7 @@ const mockData = {
 
 #### Defined in
 
-[index.ts:85](https://github.com/richardguerre/use-relay-mock-environment/blob/9215fbc/src/index.ts#L85)
+[index.ts:87](https://github.com/richardguerre/use-relay-mock-environment/blob/92743eb/src/index.ts#L87)
 
 ___
 
@@ -63,12 +63,12 @@ You can specify one or more of the following:
 | :------ | :------ | :------ |
 | `mockDescription?` | `string` | (optional) describe what type/category the field is. This mockDescription goes through the same fuzzy search that the field name goes through. |
 | `mockPath?` | `string` | (optional) path taken by the query (not fragment) to get to the field. Example: ``` query {   usersConnection {     edges {       node {         firstName       }     }   } } ``` In this case, the path of field `firstName` is `"usersConnection.edges.node.firstName"`. |
-| `mockType?` | `FakerPath` | type/category of the field. Only faker types are supported for now. Example: Setting mockType to `faker.random.word` will result in generating a random word. |
-| `mockValues?` | `any`[] | (optional) an array of possible values to randomly select from. Example: Setting mockValues to `['hello', 'world', 3, true, false]`, the generator will randomly select out of those values.  If you want to add weight to one value, you can use the `Array(3).fill(yourValue)`. Example: ``` "fieldName": {   mockValues: [Array(3).fill('hello'), 'world', 3, true, false] } ``` `'hello'` is 3x more likely to be selected. |
+| `mockType?` | `FakerPath` | type/category of the field. Only faker types are supported for now. Example:  Setting mockType to `faker.random.word` will result in generating a random word. |
+| `mockValues?` | `any`[] | (optional) an array of possible values to randomly select from. Example:  Setting mockValues to `['hello', 'world', 3, true, false]`, the generator will randomly select out of those values.  If you want to add weight to one value, you can use the `Array(3).fill(yourValue)`. Example: ``` "fieldName": {   mockValues: [Array(3).fill('hello'), 'world', 3, true, false] } ``` `'hello'` is 3x more likely to be selected. |
 
 #### Defined in
 
-[index.ts:26](https://github.com/richardguerre/use-relay-mock-environment/blob/9215fbc/src/index.ts#L26)
+[index.ts:26](https://github.com/richardguerre/use-relay-mock-environment/blob/92743eb/src/index.ts#L26)
 
 ___
 
@@ -80,7 +80,7 @@ Same as the `RelayMockOptions` below.
 
 #### Defined in
 
-[index.ts:157](https://github.com/richardguerre/use-relay-mock-environment/blob/9215fbc/src/index.ts#L157)
+[index.ts:173](https://github.com/richardguerre/use-relay-mock-environment/blob/92743eb/src/index.ts#L173)
 
 ___
 
@@ -95,14 +95,16 @@ ___
 | `customResolvers?` | `MockResolvers` | (optional) custom resolvers that are spread after use-relay-mock-environment's `ID` and `String` resolvers. ``` const resolvers = {   ID() {...},   String() {...},   // your custom resolvers go here } ``` You can of course override the default `ID` and `String` resolvers by specifying your own.  Read more about custom resolvers here: https://relay.dev/docs/guides/testing-relay-components/#mock-payload-generator-and-the-relay_test_operation-directive |
 | `data?` | [`RelayMockData`](modules.md#relaymockdata) | (optional) an object containing overrides to the types/categories of each field, where each key is the `fieldName` or `parentTypeName` (see below).  First specify the `parentTypeName` as the key, and the value is an object containing the `fieldName`(s) as the key(s). Example: ```js const mockData = {   users: {     firstName: {       mockType: 'faker.name.firstName'     }   } } ``` |
 | `extendStringResolver?` | `MockResolver` | (optional) a function to extend use-relay-mock-environment's `String` resolver.  **`param`** `context` is the mock resolver context (read more about it here: https://relay.dev/docs/guides/testing-relay-components/#mock-resolver-context)  **`param`** `generateId` is a function to generate a globally unique ID number. |
+| `fakerSeed?` | `number` | Runs `faker.seed(n)` with `n` being the number that you specify.  You can alternatively give `seed` instead which accepts both a string or number. |
 | `forceLoading?` | `boolean` | (optional) Whether to force loading and don't resolve any GraphQL operation. |
 | `generatorOptions?` | `MockPayloadGeneratorOptions` | (optional) mock generator options. Please read documentation of type MockPayLoadGeneratorOptions. |
 | `instantInitialLoading?` | `boolean` | (optional) Whether to instantly load the GraphQL operation. By default there is a 300ms loading time to mimick real-world network conditions.  This only applies to the initial loading. If you would like to change the loading time, set `loadTime` instead. |
 | `loadTime?` | `number` | (optional) Loading time in miliseconds for each GraphQL operations. Default is 300ms as to mimick real-world network conditions. |
+| `seed?` | `number` \| `string` | If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify. This is the same as giving `fakerSeed`.  If a string is passed in, it first converts the string into a hashCode number (like Java's String.hashCode()), and then runs `faker.seed(n)`, where `n` is the hashCode number. |
 
 #### Defined in
 
-[index.ts:91](https://github.com/richardguerre/use-relay-mock-environment/blob/9215fbc/src/index.ts#L91)
+[index.ts:93](https://github.com/richardguerre/use-relay-mock-environment/blob/92743eb/src/index.ts#L93)
 
 ## Functions
 
@@ -140,4 +142,4 @@ a function that is the `useRelayMockEnvironment()` React hook. Read more about i
 
 #### Defined in
 
-[index.ts:172](https://github.com/richardguerre/use-relay-mock-environment/blob/9215fbc/src/index.ts#L172)
+[index.ts:188](https://github.com/richardguerre/use-relay-mock-environment/blob/92743eb/src/index.ts#L188)
