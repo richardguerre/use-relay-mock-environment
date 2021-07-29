@@ -237,12 +237,13 @@ export function createRelayMockEnvironmentHook(
                       data.mockPath === context.path?.join('.'))
                   ) {
                     if (data.mockValues) {
-                      const result =
-                        data.mockValues[
-                          Math.round(
-                            Math.random() * (data.mockValues.length - 1)
-                          )
-                        ];
+                      const rngIndex =
+                        opts.fakerSeed || opts.seed
+                          ? 0
+                          : Math.round(
+                              Math.random() * (data.mockValues.length - 1)
+                            );
+                      const result = data.mockValues[rngIndex];
                       if (result) return result;
                     }
                     if (data.mockType) {
