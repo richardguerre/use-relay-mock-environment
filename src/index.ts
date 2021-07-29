@@ -43,12 +43,14 @@ export type RelayMockDataField = {
 
   /**
    * type/category of the field. Only faker types are supported for now. Example:
+   *
    * Setting mockType to `faker.random.word` will result in generating a random word.
    */
   mockType?: FakerPath;
 
   /**
    * (optional) an array of possible values to randomly select from. Example:
+   *
    * Setting mockValues to `['hello', 'world', 3, true, false]`, the generator will randomly select out of those values.
    *
    * If you want to add weight to one value, you can use the `Array(3).fill(yourValue)`. Example:
