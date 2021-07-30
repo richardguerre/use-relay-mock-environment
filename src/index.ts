@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { createMockEnvironment } from 'relay-test-utils';
 import faker from 'faker';
 import Fuse from 'fuse.js';
@@ -203,7 +203,7 @@ export function createRelayMockEnvironmentHook(
     const fieldNameToMockTypeMap = new Map();
     seedFaker(options);
 
-    const main = () => {
+    const main = useCallback(() => {
       if (!opts.forceLoading) {
         try {
           environment.mock.resolveMostRecentOperation(operation => {
@@ -329,7 +329,7 @@ export function createRelayMockEnvironmentHook(
           }
         }
       }
-    };
+    }, [environment.mock, fieldNameToMockTypeMap, opts]);
 
     useEffect(() => {
       if (opts.instantInitialLoading) {
@@ -340,7 +340,7 @@ export function createRelayMockEnvironmentHook(
       return () => {
         clearInterval(interval);
       };
-    }, []);
+    }, [main, opts.instantInitialLoading, opts.loadTime]);
 
     return environment;
   }

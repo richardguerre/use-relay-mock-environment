@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Type definitions for Fuse.js v6.4.6
 // TypeScript v3.9.5
 
