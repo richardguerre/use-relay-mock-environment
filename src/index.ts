@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { createMockEnvironment } from 'relay-test-utils';
 import faker from 'faker';
 import Fuse from 'fuse.js';
@@ -11,7 +11,7 @@ import {
 } from './relay-test-utils';
 import fakerTypes, { FakerPath } from './faker';
 import { FuseTypes } from './fuse';
-import { runFakerUsingPath, startsWithOneOf } from './utils';
+import { runFakerUsingPath, seedFaker, startsWithOneOf } from './utils';
 
 /**
  * An object to describe how to override the guessed type/category by use-relay-mock-environment.
@@ -43,12 +43,14 @@ export type RelayMockDataField = {
 
   /**
    * type/category of the field. Only faker types are supported for now. Example:
+   *
    * Setting mockType to `faker.random.word` will result in generating a random word.
    */
   mockType?: FakerPath;
 
   /**
    * (optional) an array of possible values to randomly select from. Example:
+   *
    * Setting mockValues to `['hello', 'world', 3, true, false]`, the generator will randomly select out of those values.
    *
    * If you want to add weight to one value, you can use the `Array(3).fill(yourValue)`. Example:
@@ -149,6 +151,13 @@ export type RelayMockOptions = {
  * ```
  */
   data?: RelayMockData;
+
+  /**
+   * If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify. This is the same as giving `fakerSeed`.
+   *
+   * If a string is passed in, it first converts the string into a hashCode number (like Java's String.hashCode()), and then runs `faker.seed(n)`, where `n` is the hashCode number.
+   */
+  seed?: number | string;
 };
 
 /**
@@ -177,6 +186,7 @@ export function createRelayMockEnvironmentHook(
     ...globalOptions?.fuseOptions,
   };
   const fuse = new Fuse(fakerTypes, fuseOptions);
+  seedFaker(globalOptions);
 
   function useRelayMockEnvironment(options?: RelayMockOptions) {
     const opts: RelayMockOptions = {
@@ -191,8 +201,9 @@ export function createRelayMockEnvironmentHook(
     const environment = useMemo(() => createMockEnvironment(), []);
 
     const fieldNameToMockTypeMap = new Map();
+    seedFaker(options);
 
-    const main = () => {
+    const main = useCallback(() => {
       if (!opts.forceLoading) {
         try {
           environment.mock.resolveMostRecentOperation(operation => {
@@ -221,12 +232,12 @@ export function createRelayMockEnvironmentHook(
                       data.mockPath === context.path?.join('.'))
                   ) {
                     if (data.mockValues) {
-                      const result =
-                        data.mockValues[
-                          Math.round(
+                      const rngIndex = opts.seed
+                        ? 0
+                        : Math.round(
                             Math.random() * (data.mockValues.length - 1)
-                          )
-                        ];
+                          );
+                      const result = data.mockValues[rngIndex];
                       if (result) return result;
                     }
                     if (data.mockType) {
@@ -318,7 +329,7 @@ export function createRelayMockEnvironmentHook(
           }
         }
       }
-    };
+    }, [environment.mock, fieldNameToMockTypeMap, opts]);
 
     useEffect(() => {
       if (opts.instantInitialLoading) {
@@ -329,7 +340,7 @@ export function createRelayMockEnvironmentHook(
       return () => {
         clearInterval(interval);
       };
-    }, []);
+    }, [main, opts.instantInitialLoading, opts.loadTime]);
 
     return environment;
   }

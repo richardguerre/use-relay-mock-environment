@@ -11,7 +11,19 @@
 
 // @ts-nocheck
 // ignoring typescript for now as flow -> typescript conversion wasn't the best but the code works.
-'use strict';
+
+import {
+  NormalizationArgument,
+  NormalizationField,
+  NormalizationLinkedField,
+  NormalizationOperation,
+  NormalizationScalarField,
+  NormalizationSelection,
+  OperationDescriptor,
+  GraphQLSingularResponse,
+  NormalizationSplitOperation,
+  Variables,
+} from 'relay-runtime';
 
 const invariant = require('invariant');
 
@@ -40,18 +52,7 @@ const {
   STREAM,
   TYPE_DISCRIMINATOR,
 } = RelayConcreteNode;
-import type {
-  NormalizationArgument,
-  NormalizationField,
-  NormalizationLinkedField,
-  NormalizationOperation,
-  NormalizationScalarField,
-  NormalizationSelection,
-  OperationDescriptor,
-  GraphQLSingularResponse,
-  NormalizationSplitOperation,
-  Variables,
-} from 'relay-runtime';
+
 type ValueResolver = (
   typeName: string | null | undefined,
   context: MockResolverContext,
@@ -159,9 +160,9 @@ function valueResolver(
         possibleDefaultValue ??
         (typeName === 'ID'
           ? DEFAULT_MOCK_RESOLVERS.ID?.(context, generateId)
-          : `<mock-value-for-field-"${
-              context.alias ?? context.name ?? 'undefined'
-            }">`);
+          : `<mock-value-for-field-"${context.alias ??
+              context.name ??
+              'undefined'}">`);
     }
 
     return mockValue;
@@ -219,7 +220,7 @@ class RelayMockPayloadGenerator {
     this._resolveValue = createValueResolver(this._mockResolvers);
     this._options = {
       ...options.options,
-      useLimitArguments: true
+      useLimitArguments: true,
     };
   }
 
@@ -579,7 +580,6 @@ class RelayMockPayloadGenerator {
           throw new Error('ActorChange fields are not yet supported.');
 
         default:
-          selection as never;
           invariant(
             false,
             'RelayMockPayloadGenerator(): Unexpected AST kind `%s`.',
@@ -816,11 +816,20 @@ class RelayMockPayloadGenerator {
     };
 
     let arrayLength = this._options?.arrayLength ?? 1;
-    if(this._options?.randomArrayLength) {
-      arrayLength = Math.round(Math.random() * (this._options.maxRandomArrayLength ?? 10)) + (this._options.minRandomArrayLength ?? 1);
-    } else if(this._options?.useLimitArguments) {
-      for (const [key, value] of Object.entries(new Object(parent?.args))) {
-        if (['first', 'last', 'limit', ...(this._options?.limitArguments ?? [])].includes(key)) {
+    if (this._options?.randomArrayLength) {
+      arrayLength =
+        Math.round(Math.random() * (this._options.maxRandomArrayLength ?? 10)) +
+        (this._options.minRandomArrayLength ?? 1);
+    } else if (this._options?.useLimitArguments) {
+      for (const [key, value] of Object.entries({ ...parent?.args })) {
+        if (
+          [
+            'first',
+            'last',
+            'limit',
+            ...(this._options?.limitArguments ?? []),
+          ].includes(key)
+        ) {
           arrayLength = this._options?.randomArrayLength
             ? Math.round(Math.random() * value) + 1
             : value;

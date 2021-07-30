@@ -970,4 +970,4 @@ const fuse = new Fuse(fakerTypes, options);
 
 const result = fuse.search('description');
 
-// console.log(JSON.stringify(result, null, 2));
+console.log(JSON.stringify(result, null, 2));
