@@ -153,13 +153,6 @@ export type RelayMockOptions = {
   data?: RelayMockData;
 
   /**
-   * Runs `faker.seed(n)` with `n` being the number that you specify.
-   *
-   * You can alternatively give `seed` instead which accepts both a string or number.
-   */
-  fakerSeed?: number;
-
-  /**
    * If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify. This is the same as giving `fakerSeed`.
    *
    * If a string is passed in, it first converts the string into a hashCode number (like Java's String.hashCode()), and then runs `faker.seed(n)`, where `n` is the hashCode number.
@@ -239,12 +232,11 @@ export function createRelayMockEnvironmentHook(
                       data.mockPath === context.path?.join('.'))
                   ) {
                     if (data.mockValues) {
-                      const rngIndex =
-                        opts.fakerSeed || opts.seed
-                          ? 0
-                          : Math.round(
-                              Math.random() * (data.mockValues.length - 1)
-                            );
+                      const rngIndex = opts.seed
+                        ? 0
+                        : Math.round(
+                            Math.random() * (data.mockValues.length - 1)
+                          );
                       const result = data.mockValues[rngIndex];
                       if (result) return result;
                     }

@@ -46,9 +46,7 @@ export const hashCode = (str: string): number => {
  */
 export const seedFaker = (options?: RelayMockOptions) => {
   // seed FakerJS if provided
-  if (options?.fakerSeed) {
-    faker.seed(options.fakerSeed);
-  } else if (options?.seed) {
+  if (options?.seed) {
     if (typeof options.seed === 'number') {
       faker.seed(options.seed);
     } else {
