@@ -204,6 +204,14 @@ export function createRelayMockEnvironmentHook(
         ...globalOptions?.data,
         ...options?.data,
       },
+      generatorOptions: {
+        ...globalOptions?.generatorOptions,
+        ...options?.generatorOptions,
+      },
+      customResolvers: {
+        ...globalOptions?.customResolvers,
+        ...options?.customResolvers,
+      },
     };
 
     const environment = useMemo(() => createMockEnvironment(), []);
