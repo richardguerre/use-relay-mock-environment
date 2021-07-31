@@ -44,7 +44,9 @@ You can read more about `data overrides` [here](https://github.com/richardguerre
 
 # Examples
 
-Create the useRelayMockEnvironment hook using `createRelayMockEnvironmentHook()` and passing in your global options
+## Base
+
+For any environment (Storybook, Cypress, dummy page, etc.), you will first need to create the `useRelayMockEnvironment` hook using `createRelayMockEnvironmentHook()` and passing in your global options
 
 ```jsx
 // useRelayMockEnvironment.(js | jsx | ts | tsx)
@@ -84,6 +86,30 @@ export const Default = () => {
 };
 ```
 
+## Chromatic
+
+When using a visual testing tool like Chromatic, you can enforce having consistent fake data by providing the `seed`, `instantInitialLoading` and/or `forceInstantInitialLoading` options. We recommend passing these options at the global level, when invoking `createRelayMockEnvironmentHook()`:
+
+```js
+// useRelayMockEnvironment.(js | jsx | ts | tsx)
+import { createRelayMockEnvironmentHook } from 'use-relay-mock-environment';
+import isChromatic from 'chromatic/isChromatic';
+
+const useRelayMockEnvironment = createRelayMockEnvironmentHook({
+  ...(isChromatic()
+    ? {
+        seed: 123, // can be anything you want (string or number)
+        forceInstantInitialLoading: true,
+      }
+    : {}),
+  // Add any other global options here (optional)
+});
+
+export default useRelayMockEnvironment;
+```
+
+With the above you don't have to add any additional options when invoking the `useRelayMockEnvironment` hook.
+
 # Options
 
 You can specify the following `options` in `createRelayMockEnvironmentHook(options)` (global level) or `useRelayMockEnvironment(options)` (component specific level):
@@ -97,7 +123,7 @@ You can specify the following `options` in `createRelayMockEnvironmentHook(optio
 | `generatorOptions?`      | `MockPayloadGeneratorOptions`               | (optional) mock generator options. Please read documentation of type MockPayLoadGeneratorOptions.                                                                                                                                                                                                                                                                                                                                                        |
 | `instantInitialLoading?` | `boolean`                                   | (optional) Whether to instantly load the GraphQL operation. By default there is a 300ms loading time to mimick real-world network conditions. This only applies to the initial loading. If you would like to change the loading time, set `loadTime` instead.                                                                                                                                                                                            |
 | `loadTime?`              | `number`                                    | (optional) Loading time in miliseconds for each GraphQL operations. Default is 300ms as to mimick real-world network conditions.                                                                                                                                                                                                                                                                                                                         |
-| `seed?`                  | `number` \| `string`                        | If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify. This is the same as giving `fakerSeed`. If a string is passed in, it first converts the string into a hashCode number (like Java's String.hashCode()), and then runs `faker.seed(n)`, where `n` is the hashCode number.                                                                                                                           |
+| `seed?`                  | `number` \| `string`                        | If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify. If a string is passed in, it first converts the string into a hashCode number (like Java's String.hashCode()), and then runs `faker.seed(n)`, where `n` is the hashCode number. Providing `seed` will override property `generatorOptions.randomLengthArray` to false, and will set `geneartorOptions.arrayLength` to 3, unless specified.        |
 
 You can read more about `options` [here](https://github.com/richardguerre/use-relay-mock-environment/blob/master/docs/modules.md#relaymockoptions).
 

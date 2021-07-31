@@ -153,9 +153,10 @@ export type RelayMockOptions = {
   data?: RelayMockData;
 
   /**
-   * If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify. This is the same as giving `fakerSeed`.
-   *
+   * If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify.
    * If a string is passed in, it first converts the string into a hashCode number (like Java's String.hashCode()), and then runs `faker.seed(n)`, where `n` is the hashCode number.
+   *
+   * Providing `seed` will override property `generatorOptions.randomLengthArray` to false, and will set `geneartorOptions.arrayLength` to 3, unless specified.
    */
   seed?: number | string;
 };
@@ -168,6 +169,13 @@ export type RelayMockGlobalOptions = RelayMockOptions & {
    * (optional) FuseJS options as outlined here: https://fusejs.io/api/options.html
    */
   fuseOptions?: FuseTypes.IFuseOptions<any>;
+
+  /**
+   * (optional) Whether to force instant initial loading on all environements created using the `useRelayMockEnvironment`. This option takes priority over the `instantInitialLoading` option.
+   *
+   * This is useful in visual testing tools, like Storybook's Chromatic which takes snapshots at first-paint.
+   */
+  forceInstantInitialLoading?: boolean;
 };
 
 /**
@@ -196,6 +204,14 @@ export function createRelayMockEnvironmentHook(
         ...globalOptions?.data,
         ...options?.data,
       },
+      generatorOptions: {
+        ...globalOptions?.generatorOptions,
+        ...options?.generatorOptions,
+      },
+      customResolvers: {
+        ...globalOptions?.customResolvers,
+        ...options?.customResolvers,
+      },
     };
 
     const environment = useMemo(() => createMockEnvironment(), []);
@@ -223,7 +239,6 @@ export function createRelayMockEnvironmentHook(
                   }
 
                   // custom data from options
-                  // specific (parentTypeName + name)
                   const data =
                     opts.data?.[context.parentType ?? '']?.[context.name ?? ''];
                   if (
@@ -258,6 +273,7 @@ export function createRelayMockEnvironmentHook(
                       'can',
                       'will',
                       'need',
+                      'use',
                     ])
                   ) {
                     return faker.datatype.boolean();
@@ -315,7 +331,15 @@ export function createRelayMockEnvironmentHook(
                 },
                 ...opts.customResolvers,
               },
-              opts.generatorOptions
+              {
+                ...opts.generatorOptions,
+                ...(opts.seed
+                  ? {
+                      randomArrayLength: false,
+                      arrayLength: opts.generatorOptions?.arrayLength ?? 3,
+                    }
+                  : {}),
+              }
             );
           });
         } catch (err) {
@@ -332,7 +356,10 @@ export function createRelayMockEnvironmentHook(
     }, [environment.mock, fieldNameToMockTypeMap, opts]);
 
     useEffect(() => {
-      if (opts.instantInitialLoading) {
+      if (
+        globalOptions?.forceInstantInitialLoading ||
+        opts.instantInitialLoading
+      ) {
         main();
       }
       const interval = setInterval(main, opts.loadTime ?? 300);
