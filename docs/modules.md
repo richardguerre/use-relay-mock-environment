@@ -40,7 +40,7 @@ const mockData = {
 
 #### Defined in
 
-[index.ts:87](https://github.com/richardguerre/use-relay-mock-environment/blob/cb77058/src/index.ts#L87)
+[index.ts:87](https://github.com/richardguerre/use-relay-mock-environment/blob/1b701be/src/index.ts#L87)
 
 ___
 
@@ -68,19 +68,19 @@ You can specify one or more of the following:
 
 #### Defined in
 
-[index.ts:26](https://github.com/richardguerre/use-relay-mock-environment/blob/cb77058/src/index.ts#L26)
+[index.ts:26](https://github.com/richardguerre/use-relay-mock-environment/blob/1b701be/src/index.ts#L26)
 
 ___
 
 ### RelayMockGlobalOptions
 
-Ƭ **RelayMockGlobalOptions**: [`RelayMockOptions`](modules.md#relaymockoptions) & { `fuseOptions?`: `FuseTypes.IFuseOptions`<`any`\>  }
+Ƭ **RelayMockGlobalOptions**: [`RelayMockOptions`](modules.md#relaymockoptions) & { `forceInstantInitialLoading?`: `boolean` ; `fuseOptions?`: `FuseTypes.IFuseOptions`<`any`\>  }
 
 Same as the `RelayMockOptions` below.
 
 #### Defined in
 
-[index.ts:166](https://github.com/richardguerre/use-relay-mock-environment/blob/cb77058/src/index.ts#L166)
+[index.ts:167](https://github.com/richardguerre/use-relay-mock-environment/blob/1b701be/src/index.ts#L167)
 
 ___
 
@@ -99,11 +99,11 @@ ___
 | `generatorOptions?` | `MockPayloadGeneratorOptions` | (optional) mock generator options. Please read documentation of type MockPayLoadGeneratorOptions. |
 | `instantInitialLoading?` | `boolean` | (optional) Whether to instantly load the GraphQL operation. By default there is a 300ms loading time to mimick real-world network conditions.  This only applies to the initial loading. If you would like to change the loading time, set `loadTime` instead. |
 | `loadTime?` | `number` | (optional) Loading time in miliseconds for each GraphQL operations. Default is 300ms as to mimick real-world network conditions. |
-| `seed?` | `number` \| `string` | If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify. This is the same as giving `fakerSeed`.  If a string is passed in, it first converts the string into a hashCode number (like Java's String.hashCode()), and then runs `faker.seed(n)`, where `n` is the hashCode number. |
+| `seed?` | `number` \| `string` | If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify. If a string is passed in, it first converts the string into a hashCode number (like Java's String.hashCode()), and then runs `faker.seed(n)`, where `n` is the hashCode number.  Providing `seed` will override property `generatorOptions.randomLengthArray` to false, and will set `geneartorOptions.arrayLength` to 3, unless specified. |
 
 #### Defined in
 
-[index.ts:93](https://github.com/richardguerre/use-relay-mock-environment/blob/cb77058/src/index.ts#L93)
+[index.ts:93](https://github.com/richardguerre/use-relay-mock-environment/blob/1b701be/src/index.ts#L93)
 
 ## Functions
 
@@ -141,4 +141,4 @@ a function that is the `useRelayMockEnvironment()` React hook. Read more about i
 
 #### Defined in
 
-[index.ts:181](https://github.com/richardguerre/use-relay-mock-environment/blob/cb77058/src/index.ts#L181)
+[index.ts:189](https://github.com/richardguerre/use-relay-mock-environment/blob/1b701be/src/index.ts#L189)
