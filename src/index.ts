@@ -64,6 +64,16 @@ export type RelayMockDataField = {
   mockValues?: Array<any>;
 
   /**
+   * (optional) a boolean to specify whether the value should resolve to null.
+   */
+  mockNull?: boolean;
+
+  /**
+   * (optional) a boolean to specify whether the value should resolve to undefined.
+   */
+  mockUndefined?: boolean;
+
+  /**
    * (optional) describe what type/category the field is.
    * This mockDescription goes through the same fuzzy search that the field name goes through.
    */
@@ -130,35 +140,44 @@ export type RelayMockOptions = {
 
   /**
    * (optional) a function to extend use-relay-mock-environment's `String` resolver.
+   * If `relay-mock-default` is returned, then it will continue with the default mock resolvers using FakerJS.
    *
    * @param context `context` is the mock resolver context (read more about it here: https://relay.dev/docs/guides/testing-relay-components/#mock-resolver-context)
-   * @param generateId `generateId` is a function to generate a globally unique ID number.
+   * @param generateId `generateId` is a function to generate a globally unique ID.
    */
   extendStringResolver?: MockResolver;
 
   /**
- * (optional) an object containing overrides to the types/categories of each field, where each key is the `fieldName` or `parentTypeName` (see below).
-
- * First specify the `parentTypeName` as the key, and the value is an object containing the `fieldName`(s) as the key(s). Example:
- * ```js
- * const mockData = {
- *   users: {
- *     firstName: {
- *       mockType: 'faker.name.firstName'
- *     }
- *   }
- * }
- * ```
- */
+   * (optional) an object containing overrides to the types/categories of each field, where each key is the `fieldName` or `parentTypeName` (see below).
+   *
+   * First specify the `parentTypeName` as the key, and the value is an object containing the `fieldName`(s) as the key(s). Example:
+   * ```js
+   * const mockData = {
+   *   users: {
+   *     firstName: {
+   *       mockType: 'faker.name.firstName'
+   *     }
+   *   }
+   * }
+   * ```
+   */
   data?: RelayMockData;
 
   /**
+   * (optional) a number or string used to seed the random generators to get consistent fake data.
+   * Useful when doing tests like Jest Snapshots or Visual Regression Tests within Chromatic.
+   *
    * If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify.
    * If a string is passed in, it first converts the string into a hashCode number (like Java's String.hashCode()), and then runs `faker.seed(n)`, where `n` is the hashCode number.
    *
    * Providing `seed` will override property `generatorOptions.randomLengthArray` to false, and will set `geneartorOptions.arrayLength` to 3, unless specified.
    */
   seed?: number | string;
+
+  /**
+   * Monitor `context` by console logging it out from the `String` resolver. Useful to get the `parentType` of a field to resolve.
+   */
+  monitorContext?: boolean;
 };
 
 /**
@@ -194,7 +213,6 @@ export function createRelayMockEnvironmentHook(
     ...globalOptions?.fuseOptions,
   };
   const fuse = new Fuse(fakerTypes, fuseOptions);
-  seedFaker(globalOptions);
 
   function useRelayMockEnvironment(options?: RelayMockOptions) {
     const opts: RelayMockOptions = {
@@ -246,6 +264,12 @@ export function createRelayMockEnvironmentHook(
                     (!data.mockPath ||
                       data.mockPath === context.path?.join('.'))
                   ) {
+                    if (data.mockNull) {
+                      return null;
+                    }
+                    if (data.mockUndefined) {
+                      return undefined;
+                    }
                     if (data.mockValues) {
                       const rngIndex = opts.seed
                         ? 0
@@ -253,7 +277,7 @@ export function createRelayMockEnvironmentHook(
                             Math.random() * (data.mockValues.length - 1)
                           );
                       const result = data.mockValues[rngIndex];
-                      if (result) return result;
+                      if (result || result === '') return result;
                     }
                     if (data.mockType) {
                       return runFakerUsingPath(data.mockType);
@@ -345,6 +369,7 @@ export function createRelayMockEnvironmentHook(
         } catch (err) {
           // ignore errors related to triggering resolveMostRecentOperation() too many times
           if (
+            // @ts-ignore
             !new Error(err).message.includes(
               'MockEnvironment: Cannot respond to request, it has not been requested yet.'
             )

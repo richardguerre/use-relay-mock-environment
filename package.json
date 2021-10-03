@@ -15,7 +15,7 @@
     "build": "tsdx build",
     "test": "tsdx test",
     "lint": "tsdx lint src test",
-    "prepare": "tsdx build",
+    "prepare": "yarn build",
     "docs": "typedoc docs src/index.ts",
     "prepack": "yarn run docs && git add docs/",
     "size": "size-limit",
