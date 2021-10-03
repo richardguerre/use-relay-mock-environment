@@ -245,6 +245,11 @@ export function createRelayMockEnvironmentHook(
               operation,
               {
                 String(context, generateId) {
+                  // console out monitor if requested
+                  if (opts.monitorContext) {
+                    console.log(context);
+                  }
+
                   // custom injected resolvers
                   if (opts.extendStringResolver) {
                     const extendStringReturn = opts.extendStringResolver(
