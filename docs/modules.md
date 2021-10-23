@@ -40,7 +40,7 @@ const mockData = {
 
 #### Defined in
 
-[index.ts:97](https://github.com/richardguerre/use-relay-mock-environment/blob/3d52c5e/src/index.ts#L97)
+[index.ts:97](https://github.com/richardguerre/use-relay-mock-environment/blob/cbd8e00/src/index.ts#L97)
 
 ___
 
@@ -70,7 +70,7 @@ You can specify one or more of the following:
 
 #### Defined in
 
-[index.ts:26](https://github.com/richardguerre/use-relay-mock-environment/blob/3d52c5e/src/index.ts#L26)
+[index.ts:26](https://github.com/richardguerre/use-relay-mock-environment/blob/cbd8e00/src/index.ts#L26)
 
 ___
 
@@ -82,7 +82,7 @@ Same as the `RelayMockOptions` below.
 
 #### Defined in
 
-[index.ts:186](https://github.com/richardguerre/use-relay-mock-environment/blob/3d52c5e/src/index.ts#L186)
+[index.ts:239](https://github.com/richardguerre/use-relay-mock-environment/blob/cbd8e00/src/index.ts#L239)
 
 ___
 
@@ -96,17 +96,19 @@ ___
 | :------ | :------ | :------ |
 | `customResolvers?` | `MockResolvers` | (optional) custom resolvers that are spread after use-relay-mock-environment's `ID` and `String` resolvers. ``` const resolvers = {   ID() {...},   String() {...},   // your custom resolvers go here } ``` You can of course override the default `ID` and `String` resolvers by specifying your own.  Read more about custom resolvers here: https://relay.dev/docs/guides/testing-relay-components/#mock-payload-generator-and-the-relay_test_operation-directive |
 | `data?` | [`RelayMockData`](modules.md#relaymockdata) | (optional) an object containing overrides to the types/categories of each field, where each key is the `fieldName` or `parentTypeName` (see below).  First specify the `parentTypeName` as the key, and the value is an object containing the `fieldName`(s) as the key(s). Example: ```js const mockData = {   users: {     firstName: {       mockType: 'faker.name.firstName'     }   } } ``` |
+| `debug?` | `boolean` | Enables debug logs. Useful to get the `parentType` of a field to resolve. |
 | `extendStringResolver?` | `MockResolver` | (optional) a function to extend use-relay-mock-environment's `String` resolver. If `relay-mock-default` is returned, then it will continue with the default mock resolvers using FakerJS.  **`param`** `context` is the mock resolver context (read more about it here: https://relay.dev/docs/guides/testing-relay-components/#mock-resolver-context)  **`param`** `generateId` is a function to generate a globally unique ID. |
 | `forceLoading?` | `boolean` | (optional) Whether to force loading and don't resolve any GraphQL operation. |
 | `generatorOptions?` | `MockPayloadGeneratorOptions` | (optional) mock generator options. Please read documentation of type MockPayLoadGeneratorOptions. |
 | `instantInitialLoading?` | `boolean` | (optional) Whether to instantly load the GraphQL operation. By default there is a 300ms loading time to mimick real-world network conditions.  This only applies to the initial loading. If you would like to change the loading time, set `loadTime` instead. |
 | `loadTime?` | `number` | (optional) Loading time in miliseconds for each GraphQL operations. Default is 300ms as to mimick real-world network conditions. |
-| `monitorContext?` | `boolean` | Monitor `context` by console logging it out from the `String` resolver. Useful to get the `parentType` of a field to resolve. |
+| `searchTypeByName?` | `string` | (optional) string input to find the full context (including the parentType) of fields that match that name. Example:  Given the following query: ```graphql query {   usersConnection {     edges {       node {         firstName       }     }   } } ``` To find the context of `firstName`, you simply add the following to your `options`: ```json {   "searchTypeByName": "firstName",   // ... } ```  Use `searchTypeByPath` for more specific results. |
+| `searchTypeByPath?` | `string` | (optional) string input to find the full context (including the parentType) of fields for which the path ends with that string input.  Given the following query: ```graphql query {   usersConnection {     edges {       node {         firstName       }     }   } } ``` To find the context of `firstName`, you simply add the following to your `options`: ```json {   "searchTypeByName": "usersConnection.edges.node.firstName",   // ... } ``` `edges.node.firstName`, `node.firstName` and `firstName` would also be valid inputs. |
 | `seed?` | `number` \| `string` | (optional) a number or string used to seed the random generators to get consistent fake data. Useful when doing tests like Jest Snapshots or Visual Regression Tests within Chromatic.  If a number is passed in, it directly runs `faker.seed(n)` with `n` being the number that you specify. If a string is passed in, it first converts the string into a hashCode number (like Java's String.hashCode()), and then runs `faker.seed(n)`, where `n` is the hashCode number.  Providing `seed` will override property `generatorOptions.randomLengthArray` to false, and will set `geneartorOptions.arrayLength` to 3, unless specified. |
 
 #### Defined in
 
-[index.ts:103](https://github.com/richardguerre/use-relay-mock-environment/blob/3d52c5e/src/index.ts#L103)
+[index.ts:103](https://github.com/richardguerre/use-relay-mock-environment/blob/cbd8e00/src/index.ts#L103)
 
 ## Functions
 
@@ -144,4 +146,4 @@ a function that is the `useRelayMockEnvironment()` React hook. Read more about i
 
 #### Defined in
 
-[index.ts:208](https://github.com/richardguerre/use-relay-mock-environment/blob/3d52c5e/src/index.ts#L208)
+[index.ts:261](https://github.com/richardguerre/use-relay-mock-environment/blob/cbd8e00/src/index.ts#L261)
