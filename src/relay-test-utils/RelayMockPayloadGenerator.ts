@@ -96,6 +96,7 @@ export type MockPayloadGeneratorOptions = {
   minRandomArrayLength?: number;
   arrayLength?: number;
   maxRandomArrayLength?: number;
+  sequencialInlineFragmentTypename?: boolean;
 };
 
 function createIdGenerator() {
@@ -200,6 +201,7 @@ class RelayMockPayloadGenerator {
   _mockResolvers: MockResolvers;
   _selectionMetadata: SelectionMetadata;
   _options: MockPayloadGeneratorOptions | null;
+  _inlineFragmentStore: { [path: string]: number };
 
   constructor(options: {
     readonly variables: Variables;
@@ -222,6 +224,7 @@ class RelayMockPayloadGenerator {
       ...options.options,
       useLimitArguments: true,
     };
+    this._inlineFragmentStore = {};
   }
 
   generate(
@@ -410,8 +413,31 @@ class RelayMockPayloadGenerator {
             (mockData[TYPENAME_KEY] == null ||
               mockData[TYPENAME_KEY] === DEFAULT_MOCK_TYPENAME)
           ) {
+            const allPossibleTypenames = [];
+            for (const selection of selections) {
+              if (
+                selection.kind === 'InlineFragment' &&
+                selection.type !== 'Node'
+              ) {
+                allPossibleTypenames.push(selection.type);
+              }
+            }
+            const joinedPath = path.join('.');
+            let typenameIndex = 0;
+            if (this._options?.sequencialInlineFragmentTypename) {
+              const currentIndex = this._inlineFragmentStore[joinedPath] ?? 0;
+              typenameIndex = currentIndex;
+              this._inlineFragmentStore[joinedPath] =
+                (currentIndex + 1) % allPossibleTypenames.length;
+            } else {
+              typenameIndex = Math.round(
+                Math.random() * (allPossibleTypenames.length - 1)
+              );
+            }
             mockData[TYPENAME_KEY] =
-              defaultValues?.[TYPENAME_KEY] ?? selection.type;
+              defaultValues?.[TYPENAME_KEY] ??
+              allPossibleTypenames[typenameIndex] ??
+              selection.type;
           }
 
           // Now, we need to make sure that we don't select abstract type
