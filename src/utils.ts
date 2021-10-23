@@ -54,3 +54,8 @@ export const seedFaker = (options?: RelayMockOptions) => {
     }
   }
 };
+
+export const debug = (...value: any[]) => {
+  console.log('--use-relay-mock-environment:', ...value);
+  return true;
+};

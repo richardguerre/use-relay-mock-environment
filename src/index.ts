@@ -11,7 +11,7 @@ import {
 } from './relay-test-utils';
 import fakerTypes, { FakerPath } from './faker';
 import { FuseTypes } from './fuse';
-import { runFakerUsingPath, seedFaker, startsWithOneOf } from './utils';
+import { debug, runFakerUsingPath, seedFaker, startsWithOneOf } from './utils';
 
 /**
  * An object to describe how to override the guessed type/category by use-relay-mock-environment.
@@ -175,9 +175,62 @@ export type RelayMockOptions = {
   seed?: number | string;
 
   /**
-   * Monitor `context` by console logging it out from the `String` resolver. Useful to get the `parentType` of a field to resolve.
+   * Enables debug logs. Useful to get the `parentType` of a field to resolve.
    */
-  monitorContext?: boolean;
+  debug?: boolean;
+
+  /**
+   * (optional) string input to find the full context (including the parentType) of fields that match that name. Example:
+   *
+   * Given the following query:
+   * ```graphql
+   * query {
+   *   usersConnection {
+   *     edges {
+   *       node {
+   *         firstName
+   *       }
+   *     }
+   *   }
+   * }
+   * ```
+   * To find the context of `firstName`, you simply add the following to your `options`:
+   * ```json
+   * {
+   *   "searchTypeByName": "firstName",
+   *   // ...
+   * }
+   * ```
+   *
+   * Use `searchTypeByPath` for more specific results.
+   */
+  searchTypeByName?: string;
+
+  /**
+   * (optional) string input to find the full context (including the parentType) of fields for which the path ends with that string input.
+   *
+   * Given the following query:
+   * ```graphql
+   * query {
+   *   usersConnection {
+   *     edges {
+   *       node {
+   *         firstName
+   *       }
+   *     }
+   *   }
+   * }
+   * ```
+   * To find the context of `firstName`, you simply add the following to your `options`:
+   * ```json
+   * {
+   *   "searchTypeByName": "usersConnection.edges.node.firstName",
+   *   // ...
+   * }
+   * ```
+   * `edges.node.firstName`, `node.firstName` and `firstName` would also be valid inputs.
+   */
+  searchTypeByPath?: string;
 };
 
 /**
@@ -231,6 +284,10 @@ export function createRelayMockEnvironmentHook(
         ...options?.customResolvers,
       },
     };
+    opts.debug &&
+      debug('global options', globalOptions) &&
+      debug('local options:', options) &&
+      debug('combinded options:', opts);
 
     const environment = useMemo(() => createMockEnvironment(), []);
 
@@ -241,13 +298,33 @@ export function createRelayMockEnvironmentHook(
       if (!opts.forceLoading) {
         try {
           environment.mock.resolveMostRecentOperation(operation => {
+            opts.debug && debug('operation:', operation);
             return MockPayloadGenerator.generate(
               operation,
               {
                 String(context, generateId) {
-                  // console out monitor if requested
-                  if (opts.monitorContext) {
-                    console.log(context);
+                  // console out context if requested
+                  opts.debug && debug('String resolver context:', context);
+
+                  // search type by name or alias
+                  if (
+                    opts.searchTypeByName === context.name ||
+                    opts.searchTypeByName === context.alias
+                  ) {
+                    console.log(
+                      'context of field matching search name:',
+                      context
+                    );
+                  }
+
+                  // search type by path
+                  if (opts.searchTypeByPath && context.path) {
+                    const joinedPath = context.path.join('.');
+                    joinedPath.endsWith(opts.searchTypeByPath) &&
+                      console.log(
+                        'context of field matching search path:',
+                        context
+                      );
                   }
 
                   // custom injected resolvers
@@ -285,6 +362,8 @@ export function createRelayMockEnvironmentHook(
                       if (result || result === '') return result;
                     }
                     if (data.mockType) {
+                      opts.debug &&
+                        debug(`faker type for ${context.name}:`, data.mockType);
                       return runFakerUsingPath(data.mockType);
                     }
                   }
@@ -324,9 +403,10 @@ export function createRelayMockEnvironmentHook(
 
                   // optimistic return
                   if (fieldNameToMockTypeMap.has(context.name)) {
-                    return runFakerUsingPath(
-                      fieldNameToMockTypeMap.get(context.name)
-                    );
+                    const fakerType = fieldNameToMockTypeMap.get(context.name);
+                    opts.debug &&
+                      debug(`faker type for ${context.name}:`, fakerType);
+                    return runFakerUsingPath(fakerType);
                   }
 
                   // fuzzy search specified description
@@ -342,6 +422,11 @@ export function createRelayMockEnvironmentHook(
                         context.name,
                         results[0].item.type
                       );
+                      opts.debug &&
+                        debug(
+                          `faker type for ${context.name}:`,
+                          results[0].item.type
+                        );
                       return runFakerUsingPath(results[0].item.type);
                     }
                   }
@@ -353,6 +438,11 @@ export function createRelayMockEnvironmentHook(
                       context.name,
                       results[0].item.type
                     );
+                    opts.debug &&
+                      debug(
+                        `faker type for ${context.name}:`,
+                        results[0].item.type
+                      );
                     return runFakerUsingPath(results[0]?.item.type);
                   }
 
@@ -366,6 +456,7 @@ export function createRelayMockEnvironmentHook(
                   ? {
                       randomArrayLength: false,
                       arrayLength: opts.generatorOptions?.arrayLength ?? 3,
+                      sequencialInlineFragmentTypename: true,
                     }
                   : {}),
               }
