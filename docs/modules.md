@@ -40,7 +40,7 @@ const mockData = {
 
 #### Defined in
 
-[index.ts:97](https://github.com/richardguerre/use-relay-mock-environment/blob/cbd8e00/src/index.ts#L97)
+[index.ts:99](https://github.com/richardguerre/use-relay-mock-environment/blob/4144ea5/src/index.ts#L99)
 
 ___
 
@@ -56,6 +56,8 @@ You can specify one or more of the following:
 - mockType
 - mockValues
 - mockDescription
+- mockNull
+- mockUndefined
 
 #### Type declaration
 
@@ -70,7 +72,7 @@ You can specify one or more of the following:
 
 #### Defined in
 
-[index.ts:26](https://github.com/richardguerre/use-relay-mock-environment/blob/cbd8e00/src/index.ts#L26)
+[index.ts:28](https://github.com/richardguerre/use-relay-mock-environment/blob/4144ea5/src/index.ts#L28)
 
 ___
 
@@ -82,7 +84,7 @@ Same as the `RelayMockOptions` below.
 
 #### Defined in
 
-[index.ts:239](https://github.com/richardguerre/use-relay-mock-environment/blob/cbd8e00/src/index.ts#L239)
+[index.ts:241](https://github.com/richardguerre/use-relay-mock-environment/blob/4144ea5/src/index.ts#L241)
 
 ___
 
@@ -108,7 +110,7 @@ ___
 
 #### Defined in
 
-[index.ts:103](https://github.com/richardguerre/use-relay-mock-environment/blob/cbd8e00/src/index.ts#L103)
+[index.ts:105](https://github.com/richardguerre/use-relay-mock-environment/blob/4144ea5/src/index.ts#L105)
 
 ## Functions
 
@@ -146,4 +148,4 @@ a function that is the `useRelayMockEnvironment()` React hook. Read more about i
 
 #### Defined in
 
-[index.ts:261](https://github.com/richardguerre/use-relay-mock-environment/blob/cbd8e00/src/index.ts#L261)
+[index.ts:263](https://github.com/richardguerre/use-relay-mock-environment/blob/4144ea5/src/index.ts#L263)
