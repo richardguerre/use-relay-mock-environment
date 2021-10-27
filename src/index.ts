@@ -22,6 +22,8 @@ import { debug, runFakerUsingPath, seedFaker, startsWithOneOf } from './utils';
  * - mockType
  * - mockValues
  * - mockDescription
+ * - mockNull
+ * - mockUndefined
  */
 export type RelayMockDataField = {
   /**
@@ -353,13 +355,15 @@ export function createRelayMockEnvironmentHook(
                       return undefined;
                     }
                     if (data.mockValues) {
-                      const rngIndex = opts.seed
+                      let rngIndex = opts.seed
                         ? 0
                         : Math.round(
                             Math.random() * (data.mockValues.length - 1)
                           );
+                      if (rngIndex < 0 || rngIndex > data.mockValues.length - 1)
+                        rngIndex = 0;
                       const result = data.mockValues[rngIndex];
-                      if (result || result === '') return result;
+                      return result;
                     }
                     if (data.mockType) {
                       opts.debug &&
