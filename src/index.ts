@@ -472,6 +472,10 @@ export function createRelayMockEnvironmentHook(
             // @ts-ignore
             !new Error(err).message.includes(
               'MockEnvironment: Cannot respond to request, it has not been requested yet.'
+            ) ||
+            // @ts-ignore
+            !new Error(err).message.includes(
+              'There are no pending operations in the list'
             )
           ) {
             throw err;
