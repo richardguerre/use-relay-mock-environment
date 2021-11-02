@@ -40,7 +40,7 @@ const mockData = {
 
 #### Defined in
 
-[index.ts:99](https://github.com/richardguerre/use-relay-mock-environment/blob/4144ea5/src/index.ts#L99)
+[index.ts:99](https://github.com/richardguerre/use-relay-mock-environment/blob/37ece44/src/index.ts#L99)
 
 ___
 
@@ -72,7 +72,7 @@ You can specify one or more of the following:
 
 #### Defined in
 
-[index.ts:28](https://github.com/richardguerre/use-relay-mock-environment/blob/4144ea5/src/index.ts#L28)
+[index.ts:28](https://github.com/richardguerre/use-relay-mock-environment/blob/37ece44/src/index.ts#L28)
 
 ___
 
@@ -84,7 +84,7 @@ Same as the `RelayMockOptions` below.
 
 #### Defined in
 
-[index.ts:241](https://github.com/richardguerre/use-relay-mock-environment/blob/4144ea5/src/index.ts#L241)
+[index.ts:241](https://github.com/richardguerre/use-relay-mock-environment/blob/37ece44/src/index.ts#L241)
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[index.ts:105](https://github.com/richardguerre/use-relay-mock-environment/blob/4144ea5/src/index.ts#L105)
+[index.ts:105](https://github.com/richardguerre/use-relay-mock-environment/blob/37ece44/src/index.ts#L105)
 
 ## Functions
 
@@ -148,4 +148,4 @@ a function that is the `useRelayMockEnvironment()` React hook. Read more about i
 
 #### Defined in
 
-[index.ts:263](https://github.com/richardguerre/use-relay-mock-environment/blob/4144ea5/src/index.ts#L263)
+[index.ts:263](https://github.com/richardguerre/use-relay-mock-environment/blob/37ece44/src/index.ts#L263)
