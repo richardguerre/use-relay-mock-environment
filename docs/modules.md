@@ -13,6 +13,7 @@
 
 ### Functions
 
+- [RelayEnvironmentProvider](modules.md#relayenvironmentprovider)
 - [createRelayMockEnvironmentHook](modules.md#createrelaymockenvironmenthook)
 
 ## Type aliases
@@ -40,7 +41,7 @@ const mockData = {
 
 #### Defined in
 
-[index.ts:99](https://github.com/richardguerre/use-relay-mock-environment/blob/37ece44/src/index.ts#L99)
+[src/index.ts:100](https://github.com/richardguerre/use-relay-mock-environment/blob/9aa610b/src/index.ts#L100)
 
 ___
 
@@ -72,7 +73,7 @@ You can specify one or more of the following:
 
 #### Defined in
 
-[index.ts:28](https://github.com/richardguerre/use-relay-mock-environment/blob/37ece44/src/index.ts#L28)
+[src/index.ts:29](https://github.com/richardguerre/use-relay-mock-environment/blob/9aa610b/src/index.ts#L29)
 
 ___
 
@@ -84,7 +85,7 @@ Same as the `RelayMockOptions` below.
 
 #### Defined in
 
-[index.ts:241](https://github.com/richardguerre/use-relay-mock-environment/blob/37ece44/src/index.ts#L241)
+[src/index.ts:242](https://github.com/richardguerre/use-relay-mock-environment/blob/9aa610b/src/index.ts#L242)
 
 ___
 
@@ -110,9 +111,29 @@ ___
 
 #### Defined in
 
-[index.ts:105](https://github.com/richardguerre/use-relay-mock-environment/blob/37ece44/src/index.ts#L105)
+[src/index.ts:106](https://github.com/richardguerre/use-relay-mock-environment/blob/9aa610b/src/index.ts#L106)
 
 ## Functions
+
+### RelayEnvironmentProvider
+
+▸ **RelayEnvironmentProvider**(`props`): `ReactElement`<`ProviderProps`<`RelayContext`\>\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `props` | `Props` |
+
+#### Returns
+
+`ReactElement`<`ProviderProps`<`RelayContext`\>\>
+
+#### Defined in
+
+node_modules/@types/react-relay/relay-hooks/RelayEnvironmentProvider.react.d.ts:9
+
+___
 
 ### createRelayMockEnvironmentHook
 
@@ -148,4 +169,4 @@ a function that is the `useRelayMockEnvironment()` React hook. Read more about i
 
 #### Defined in
 
-[index.ts:263](https://github.com/richardguerre/use-relay-mock-environment/blob/37ece44/src/index.ts#L263)
+[src/index.ts:264](https://github.com/richardguerre/use-relay-mock-environment/blob/9aa610b/src/index.ts#L264)
