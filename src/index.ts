@@ -12,6 +12,7 @@ import {
 import fakerTypes, { FakerPath } from './faker';
 import { FuseTypes } from './fuse';
 import { debug, runFakerUsingPath, seedFaker, startsWithOneOf } from './utils';
+import { RelayEnvironmentProvider } from 'react-relay';
 
 /**
  * An object to describe how to override the guessed type/category by use-relay-mock-environment.

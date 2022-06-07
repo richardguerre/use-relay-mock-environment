@@ -67,6 +67,7 @@
   "dependencies": {
     "faker": "5.5.3",
     "fuse.js": "6.4.6",
+    "react-relay": "11.0.2",
     "relay-test-utils": "11.0.2"
   },
   "peerDependencies": {
