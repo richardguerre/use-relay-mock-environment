@@ -504,3 +504,5 @@ export function createRelayMockEnvironmentHook(
 
   return useRelayMockEnvironment;
 }
+
+export { RelayEnvironmentProvider };
