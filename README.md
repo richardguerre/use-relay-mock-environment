@@ -1,6 +1,8 @@
 # use-relay-mock-environment
 
-A super easy way to test Relay Components in Storybook or in dummy pages.
+Next-level auto mocking for Relay components. Minimal code required.
+
+Instead of having to specify resolvers for each individual field or going with the default (i.e. `<mock-value-1>`), this hook will automatically guess what type/category each field is and will use [faker.js](https://www.npmjs.com/package/faker) to generate fake data for you. Letting you focus on what matters most, which is building great UI/UX.
 
 [![Version](https://img.shields.io/npm/v/use-relay-mock-environment.svg)](https://npmjs.org/package/use-relay-mock-environment)
 [![Downloads/week](https://img.shields.io/npm/dw/use-relay-mock-environment.svg)](https://npmjs.org/package/use-relay-mock-environment)
