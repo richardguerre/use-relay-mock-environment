@@ -57,6 +57,8 @@
     "@typescript-eslint/parser": "^4.28.5",
     "husky": "^7.0.0",
     "react": "^17.0.2",
+    "react-relay": "^15.0.0",
+    "relay-test-utils": "^15.0.0",
     "size-limit": "^5.0.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.0",
@@ -66,12 +68,12 @@
   },
   "dependencies": {
     "faker": "5.5.3",
-    "fuse.js": "6.4.6",
-    "react-relay": "11.0.2",
-    "relay-test-utils": "11.0.2"
+    "fuse.js": "6.4.6"
   },
   "peerDependencies": {
-    "react": ">16"
+    "react": ">16",
+    "react-relay": ">11",
+    "relay-test-utils": ">11"
   },
   "resolutions": {
     "**/@typescript-eslint/eslint-plugin": "^4.1.1",

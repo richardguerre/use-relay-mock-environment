@@ -6,6 +6,17 @@ A super easy way to test Relay Components in Storybook or in dummy pages.
 [![Downloads/week](https://img.shields.io/npm/dw/use-relay-mock-environment.svg)](https://npmjs.org/package/use-relay-mock-environment)
 [![License](https://img.shields.io/npm/l/use-relay-mock-environment.svg)](https://github.com/richardguerre/use-relay-mock-environment/blob/master/package.json)
 
+## Installation
+Install the library and relay-test-utils. Make sure you use the relay-test-utils version corresponding to your react-relay.
+
+```
+yarn add -D use-relay-mock-environment relay-test-utils
+```
+OR
+```
+npm i --save-dev use-relay-mock-environment relay-test-utils
+```
+
 ## How does it work?
 
 The hook does three main things:
