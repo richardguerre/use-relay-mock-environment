@@ -20,11 +20,11 @@ export const fakerTypes = [
     keywords: ['random', 'alphaNumeric', 'random alphaNumeric'],
   },
   {
-    type: 'faker.name.firstName',
+    type: 'faker.person.firstName',
     keywords: ['firstName', 'given name', 'forename', 'name firstName'],
   },
   {
-    type: 'faker.name.lastName',
+    type: 'faker.person.lastName',
     keywords: [
       'lastName',
       'family name',
@@ -38,7 +38,7 @@ export const fakerTypes = [
     ],
   },
   {
-    type: 'faker.name.middleName',
+    type: 'faker.person.middleName',
     keywords: [
       'middleName',
       'given middle name',
@@ -47,31 +47,31 @@ export const fakerTypes = [
     ],
   },
   {
-    type: 'faker.name.findName',
+    type: 'faker.person.findName',
     keywords: ['fullName', 'name', 'findName', 'name findName'],
   },
   {
-    type: 'faker.name.jobTitle',
+    type: 'faker.person.jobTitle',
     keywords: ['name', 'jobTitle', 'name jobTitle'],
   },
   {
-    type: 'faker.name.gender',
+    type: 'faker.person.gender',
     keywords: ['name', 'gender', 'name gender'],
   },
   {
-    type: 'faker.name.prefix',
+    type: 'faker.person.prefix',
     keywords: ['name', 'prefix', 'name prefix'],
   },
   {
-    type: 'faker.name.suffix',
+    type: 'faker.person.suffix',
     keywords: ['name', 'suffix', 'name suffix'],
   },
   {
-    type: 'faker.name.title',
+    type: 'faker.person.title',
     keywords: ['name', 'title', 'name title'],
   },
   {
-    type: 'faker.name.jobDescriptor',
+    type: 'faker.person.jobDescriptor',
     keywords: [
       'name',
       'jobDescriptor',
@@ -82,7 +82,7 @@ export const fakerTypes = [
     ],
   },
   {
-    type: 'faker.name.jobArea',
+    type: 'faker.person.jobArea',
     keywords: [
       'name',
       'jobArea',
@@ -93,7 +93,7 @@ export const fakerTypes = [
     ],
   },
   {
-    type: 'faker.name.jobType',
+    type: 'faker.person.jobType',
     keywords: [
       'name',
       'jobType',
@@ -836,11 +836,11 @@ export const fakerTypes = [
     ],
   },
   {
-    type: 'faker.datatype.string',
+    type: 'faker.string.sample',
     keywords: ['datatype', 'string', 'datatype string', 'random string text'],
   },
   {
-    type: 'faker.datatype.uuid',
+    type: 'faker.string.uuid',
     keywords: ['datatype', 'uuid', 'datatype uuid'],
   },
   {
@@ -898,18 +898,18 @@ export type FakerPath =
   | 'faker.helpers.contextualCard'
   | 'faker.helpers.userCard'
   | 'faker.helpers.createTransaction'
-  | 'faker.name.firstName'
-  | 'faker.name.lastName'
-  | 'faker.name.middleName'
-  | 'faker.name.findName'
-  | 'faker.name.jobTitle'
-  | 'faker.name.gender'
-  | 'faker.name.prefix'
-  | 'faker.name.suffix'
-  | 'faker.name.title'
-  | 'faker.name.jobDescriptor'
-  | 'faker.name.jobArea'
-  | 'faker.name.jobType'
+  | 'faker.person.firstName'
+  | 'faker.person.lastName'
+  | 'faker.person.middleName'
+  | 'faker.person.findName'
+  | 'faker.person.jobTitle'
+  | 'faker.person.gender'
+  | 'faker.person.prefix'
+  | 'faker.person.suffix'
+  | 'faker.person.title'
+  | 'faker.person.jobDescriptor'
+  | 'faker.person.jobArea'
+  | 'faker.person.jobType'
   | 'faker.address.zipCode'
   | 'faker.address.zipCodeByState'
   | 'faker.address.city'
@@ -1107,8 +1107,8 @@ export type FakerPath =
   | 'faker.datatype.number'
   | 'faker.datatype.float'
   | 'faker.datatype.datetime'
-  | 'faker.datatype.string'
-  | 'faker.datatype.uuid'
+  | 'faker.string.sample'
+  | 'faker.string.uuid'
   | 'faker.datatype.boolean'
   | 'faker.datatype.hexaDecimal'
   | 'faker.datatype.json'
