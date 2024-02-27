@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { createMockEnvironment } from 'relay-test-utils';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import Fuse from 'fuse.js';
 
 import {
